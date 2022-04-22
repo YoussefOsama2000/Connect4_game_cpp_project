@@ -35,6 +35,7 @@ void enterPlayer1turn(int column){
 
 class test
 {
+public:
 
 };
 
