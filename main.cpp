@@ -1,9 +1,8 @@
-
 #include <iostream>
 using namespace std;
 
-#define blue 10
-#define red 11
+#define X 10
+#define O 11
 
 class GameEngine
 {
@@ -18,12 +17,12 @@ public:
             cout << " |   ";
             for (int j = 0; j < 7; j++)
             {
-                if(board[i][j]==blue)
-                    cout <<"B   ";
-                else if (board[i][j]==red)
-                    cout <<"R   ";
+                if(board[i][j] == X)
+                    cout <<"X   ";
+                else if (board[i][j] == O)
+                    cout <<"O   ";
                 else
-                    cout <<"x   ";
+                    cout <<"-   ";
 
             }
             cout << "| " << endl;
@@ -47,7 +46,7 @@ public:
         int i=0;
         int column_norm=column-1;   //to normalize the input column value to the actual column value in the array
 
-        if (color != blue && color != red)
+        if (color != X && color != O)
         {
             cout<<"Invalid piece. Try again!";
             return;
@@ -76,16 +75,18 @@ int main()
 {
     GameEngine gameEngine = GameEngine();
     gameEngine.printBoard();
-    gameEngine.place(1,red);
+    gameEngine.place(1, O);
     cout<<endl<<endl<<endl;
     gameEngine.printBoard();
-    gameEngine.place(3,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,red);
-    gameEngine.printBoard();
-    gameEngine.place(1,red);
+    gameEngine.place(2, X);
+    gameEngine.place(2, X);
+    gameEngine.place(2, O);
+    gameEngine.place(3, O);
+    gameEngine.place(3, O);
+    gameEngine.place(3, X);
+    gameEngine.place(2, X);
+    gameEngine.place(2, O);
+    gameEngine.place(1, X);
+    gameEngine.place(1, O);
     gameEngine.printBoard();
 }
