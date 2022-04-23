@@ -24,27 +24,27 @@ public:
                     cout <<"R   ";
                 else
                     cout <<"x   ";
-                
+
             }
             cout << "| " << endl;
         }
         cout<<"   ____________________________"<<endl<<endl;
     }
-void enterPlayer1turn(int column){
+    void enterPlayer1turn(int column){
 
     }
 
 
     GameEngine()      //for some reason initializing the array normally returns garbage when printed
     {
-       for(int i=0;i<6;i++)
-        for(int j=0;j<7;j++)
-            board[i][j]=0;
+        for(int i=0;i<6;i++)
+            for(int j=0;j<7;j++)
+                board[i][j]=0;
     }
 
     void place(int column, int color)
     {
-        int i=0;  
+        int i=0;
         int column_norm=column-1;   //to normalize the input column value to the actual column value in the array
 
         if (color != blue && color != red)
@@ -52,20 +52,20 @@ void enterPlayer1turn(int column){
             cout<<"Invalid piece. Try again!";
             return;
         }
-          
-        if(board[0][column_norm]!=0)
-            {
-                cout<<"Column is full. Try again! \n";
-                return;
-            }
-            else
-            {
-                for(i;i<6;i++)
-                    if (board[i+1][column_norm]!=0)    //the loop finds the outmost filled cell in the column then we place at the cell above it
-                        break;
 
-                board[i][column_norm]=color;         
-            }
+        if(board[0][column_norm]!=0)
+        {
+            cout<<"Column is full. Try again! \n";
+            return;
+        }
+        else
+        {
+            for(i;i<6;i++)
+                if (board[i+1][column_norm]!=0)    //the loop finds the outmost filled cell in the column then we place at the cell above it
+                    break;
+
+            board[i][column_norm]=color;
+        }
     }
 };
 
@@ -89,4 +89,3 @@ int main()
     gameEngine.place(1,red);
     gameEngine.printBoard();
 }
-   
