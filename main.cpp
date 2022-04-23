@@ -79,14 +79,14 @@ int main()
     gameEngine.place(1,red);
     cout<<endl<<endl<<endl;
     gameEngine.printBoard();
+    gameEngine.place(2,blue);
+    gameEngine.place(2,blue);
+    gameEngine.place(2,red);
+    gameEngine.place(3,red);
+    gameEngine.place(3,red);
     gameEngine.place(3,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,blue);
-    gameEngine.place(1,red);
-    gameEngine.printBoard();
-    gameEngine.place(1,red);
+    
+    
     gameEngine.printBoard();
 }
    
