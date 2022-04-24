@@ -3,6 +3,12 @@ using namespace std;
 
 #define X 10
 #define O 11
+#define X_won 1
+#define O_won 2
+//#define GameEnded 0
+
+int current_move[2];
+int gameState;
 
 class GameEngine
 {
@@ -48,8 +54,14 @@ public:
 
         if (color != X && color != O)
         {
-            cout<<"Invalid piece. Try again!";
+            cout<<"Invalid piece. Try again! \n";
             return;
+        }
+
+        if(column_norm<0 || column_norm>6)
+        {
+          cout<<"Enter a valid column! \n";
+          return;  
         }
 
         if(board[0][column_norm]!=0)
@@ -59,13 +71,165 @@ public:
         }
         else
         {
-            for(i;i<6;i++)
+            for(i;i<5;i++)
                 if (board[i+1][column_norm]!=0)    //the loop finds the outmost filled cell in the column then we place at the cell above it
                     break;
 
             board[i][column_norm]=color;
         }
+             current_move[0]=i;
+             current_move[1]=column_norm;
     }
+
+    int getWinner()
+    {
+        int m=current_move[0]; //row
+        int n=current_move[1]; //column
+        int current_piece=board[m][n];
+        int loop_row,loop_col,loop_no;
+        int t;
+
+        //checking for winner horizontally
+        for(int i=0;i<4;i++)
+        {
+            if((board[m][i]+board[m][i+1]+board[m][i+2]+board[m][i+3])==4*current_piece)
+                if(current_piece==X)
+                    return X_won;
+                else if(current_piece==O)
+                    return O_won;                            
+        }
+
+        //checking for winner vertically
+        for(int i=0;i<3;i++)
+        {
+            //t=(board[i][n])+(board[i+1][n])+(board[i+2][n])+(board[i+3][n]); debugging variable
+            if((board[i][n]+board[i+1][n]+board[i+2][n]+board[i+3][n])==4*current_piece)
+                if(current_piece==X)
+                    return X_won;
+                else if(current_piece==O)
+                    return O_won;    
+        }
+
+        //checking for winner on the right diagonal
+        if((m+n)<=6)
+           { 
+               loop_row=0;
+               loop_col=m+n;
+               loop_no=m+n+1;
+           }
+        else if((m+n)>6)
+        {                                             //this part to get the specific diagonal in which last cell was filled
+            loop_row=m+n-6;                  
+            loop_col=6;
+            loop_no=6-loop_row;
+        }
+        else
+            {
+                loop_row=0;
+                loop_col=6;
+                loop_no=6;
+            }
+
+        for(int i=0;i<loop_no-3;i++)
+        {
+            if(loop_no<=2)
+            break;
+           // t=board[loop_row+i][loop_col-i]+board[loop_row+i+1][loop_col-i-1]+board[loop_row+i+2][loop_col-i-2]+board[loop_row+i+3][loop_col-i-3]; debugging variable
+            if((board[loop_row+i][loop_col-i]+board[loop_row+i+1][loop_col-i-1]+board[loop_row+i+2][loop_col-i-2]+board[loop_row+i+3][loop_col-i-3])==4*current_piece)
+                if(current_piece==X)
+                    return X_won;
+                else if(current_piece==O)
+                    return O_won;    
+        }      
+
+        //checking for winner on the left diagonal
+        if(m-n<0)
+        {
+            loop_row=m-n;
+            loop_col=0;
+            loop_no=6-(m-n);
+        }      
+        else if(m-n>0)
+        {
+            loop_row=0;
+            loop_col=m-n+1;
+            loop_no=7-(m-n);
+        }
+        else
+        {                                       //this part to get the specific diagonal in which last cell was filled
+            loop_row=0;
+            loop_col=0;
+            loop_no=6;
+        }
+
+for(int i=0;i<loop_no-3;i++)
+        {
+            if(loop_no<=2)
+            break;
+
+            if((board[loop_row+i][loop_col+i]+board[loop_row+i+1][loop_col+i+1]+board[loop_row+i+2][loop_col+i+2]+board[loop_row+i+3][loop_col+i+3])==4*current_piece)
+                if(current_piece==X)
+                    return X_won;
+                else if(current_piece==O)
+                    return O_won;    
+        }      
+
+        return 0;
+    }
+    
+
+  /* void getWinner(int currentRow, int currentColumn) { //the function recive the location of the last move to check the winner arround it
+        // 1* check the row of where the placed piece belongs to
+        for (int i = 0; i < 4; i++)
+            if (board[currentRow][i] == board[currentRow][i + 1] == board[currentRow][i + 2] ==
+                board[currentRow][i + 3]) {
+                gameState = GameEnded;
+               // printWinner(board[currentRow][currentColumn]);
+               cout<<board[current_move[0]][current_move[1]];
+                return;
+            }
+            // 2* check the column of where the placed piece belongs to
+            for (int i = 0; i < 3; i++)
+                if (board[i][currentColumn] == board[i + 1][currentColumn] == board[i + 2][currentColumn] ==
+                    board[i + 3][currentColumn]) {
+                    gameState = GameEnded;
+                    //printWinner(board[currentRow][currentColumn]);
+                    cout<<board[current_move[0]][current_move[1]];
+                    return;
+                }
+                // 3* check the cross diagonal where the placed piece belongs to
+                int startRow = currentRow, startColumn = currentColumn;
+                while (startColumn != 0 && startRow != 0) {
+                    startRow--;
+                    startColumn--;
+                }
+                for (int i = 0; startRow + 3 < 6 && startColumn + 3 < 7; i++) {
+                    if (board[startRow][startColumn] == board[startRow + 1][startColumn + 1] ==
+                        board[startRow + 2][startColumn + 2] == board[startRow + 3][startColumn + 3]) {
+                        gameState = GameEnded;
+                        //printWinner(board[currentRow][currentColumn]);
+                        cout<<board[current_move[0]][current_move[1]];
+                        return;
+                    }
+                    startRow++;startColumn++;
+                }
+                // 4* check the main diagonal where the placed piece belongs to
+                startRow = currentRow, startColumn = currentColumn;
+                while (startColumn != 0 && startRow != 6) {
+                    startRow++;
+                    startColumn--;
+                }
+                for (int i = 0; startRow - 3 >= 0 && startColumn + 3 < 7; i++) {
+                    if (board[startRow][startColumn] == board[startRow - 1][startColumn + 1] ==
+                        board[startRow - 2][startColumn + 2] == board[startRow - 3][startColumn + 3]) {
+                        gameState = GameEnded;
+                        //printWinner(board[currentRow][currentColumn]);
+                        cout<<board[current_move[0]][current_move[1]];
+                        return;
+                    }
+                }
+            }
+            */
 };
 
 
@@ -75,18 +239,21 @@ int main()
 {
     GameEngine gameEngine = GameEngine();
     gameEngine.printBoard();
-    gameEngine.place(1, O);
     cout<<endl<<endl<<endl;
-    gameEngine.printBoard();
-    gameEngine.place(2, X);
-    gameEngine.place(2, X);
-    gameEngine.place(2, O);
-    gameEngine.place(3, O);
-    gameEngine.place(3, O);
+    gameEngine.place(6, O);
+    gameEngine.place(5, O);
+    gameEngine.place(5, O);
+    gameEngine.place(4, O);
+    gameEngine.place(4, O);
     gameEngine.place(3, X);
-    gameEngine.place(2, X);
-    gameEngine.place(2, O);
-    gameEngine.place(1, X);
-    gameEngine.place(1, O);
+    gameEngine.place(3, O);
+    gameEngine.place(3, O);
+    gameEngine.place(3, O);
+    gameEngine.place(4, O);
+    //gameEngine.place(5, O);
+    //gameEngine.place(5, O);
+    
     gameEngine.printBoard();
+   // gameEngine.getWinner(current_move[0],current_move[1]);
+   cout<<gameEngine.getWinner()<<endl;
 }
