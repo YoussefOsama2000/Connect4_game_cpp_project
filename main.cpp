@@ -8,7 +8,6 @@ using namespace std;
 //#define GameEnded 0
 
 int current_move[2];
-int gameState;
 
 class GameEngine
 {
@@ -51,6 +50,7 @@ public:
     {
         int i=0;
         int column_norm=column-1;   //to normalize the input column value to the actual column value in the array
+        int col_reentry=0;
 
         if (color != X && color != O)
         {
@@ -61,13 +61,16 @@ public:
         if(column_norm<0 || column_norm>6)
         {
           cout<<"Enter a valid column! \n";
-          return;  
+          cin>>col_reentry;
+          place(col_reentry, color);
+          return;
         }
 
         if(board[0][column_norm]!=0)
         {
             cout<<"Column is full. Try again! \n";
-            return;
+            cin>>col_reentry;
+          place(col_reentry, color);
         }
         else
         {
@@ -177,59 +180,6 @@ for(int i=0;i<loop_no-3;i++)
         return 0;
     }
     
-
-  /* void getWinner(int currentRow, int currentColumn) { //the function recive the location of the last move to check the winner arround it
-        // 1* check the row of where the placed piece belongs to
-        for (int i = 0; i < 4; i++)
-            if (board[currentRow][i] == board[currentRow][i + 1] == board[currentRow][i + 2] ==
-                board[currentRow][i + 3]) {
-                gameState = GameEnded;
-               // printWinner(board[currentRow][currentColumn]);
-               cout<<board[current_move[0]][current_move[1]];
-                return;
-            }
-            // 2* check the column of where the placed piece belongs to
-            for (int i = 0; i < 3; i++)
-                if (board[i][currentColumn] == board[i + 1][currentColumn] == board[i + 2][currentColumn] ==
-                    board[i + 3][currentColumn]) {
-                    gameState = GameEnded;
-                    //printWinner(board[currentRow][currentColumn]);
-                    cout<<board[current_move[0]][current_move[1]];
-                    return;
-                }
-                // 3* check the cross diagonal where the placed piece belongs to
-                int startRow = currentRow, startColumn = currentColumn;
-                while (startColumn != 0 && startRow != 0) {
-                    startRow--;
-                    startColumn--;
-                }
-                for (int i = 0; startRow + 3 < 6 && startColumn + 3 < 7; i++) {
-                    if (board[startRow][startColumn] == board[startRow + 1][startColumn + 1] ==
-                        board[startRow + 2][startColumn + 2] == board[startRow + 3][startColumn + 3]) {
-                        gameState = GameEnded;
-                        //printWinner(board[currentRow][currentColumn]);
-                        cout<<board[current_move[0]][current_move[1]];
-                        return;
-                    }
-                    startRow++;startColumn++;
-                }
-                // 4* check the main diagonal where the placed piece belongs to
-                startRow = currentRow, startColumn = currentColumn;
-                while (startColumn != 0 && startRow != 6) {
-                    startRow++;
-                    startColumn--;
-                }
-                for (int i = 0; startRow - 3 >= 0 && startColumn + 3 < 7; i++) {
-                    if (board[startRow][startColumn] == board[startRow - 1][startColumn + 1] ==
-                        board[startRow - 2][startColumn + 2] == board[startRow - 3][startColumn + 3]) {
-                        gameState = GameEnded;
-                        //printWinner(board[currentRow][currentColumn]);
-                        cout<<board[current_move[0]][current_move[1]];
-                        return;
-                    }
-                }
-            }
-            */
 };
 
 
@@ -239,21 +189,52 @@ int main()
 {
     GameEngine gameEngine = GameEngine();
     gameEngine.printBoard();
-    cout<<endl<<endl<<endl;
-    gameEngine.place(6, O);
-    gameEngine.place(5, O);
-    gameEngine.place(5, O);
-    gameEngine.place(4, O);
-    gameEngine.place(4, O);
-    gameEngine.place(3, X);
-    gameEngine.place(3, O);
-    gameEngine.place(3, O);
-    gameEngine.place(3, O);
-    gameEngine.place(4, O);
-    //gameEngine.place(5, O);
-    //gameEngine.place(5, O);
+    cout<<endl<<endl;
+
+    int playingCol;
+    int filled_cells=0;
+    int winner=0;
+   
+    while(1)
+    {
+        cout<<"Player 1 turn: \n"<<"Please enter a column \n";
+        cin>>playingCol;
+        gameEngine.place(playingCol,X);
+        filled_cells++;
+        if(gameEngine.getWinner()!=0)
+        {
+            winner=gameEngine.getWinner();
+            break;
+        }
+        cout<<endl<<endl;
+        gameEngine.printBoard();
+        cout<<endl<<endl;
+
+        cout<<"Player 2 turn: \n"<<"Please enter a column \n";
+        cin>>playingCol;
+        gameEngine.place(playingCol,O);
+        filled_cells++;
+        if(gameEngine.getWinner()!=0)
+        {
+            winner=gameEngine.getWinner();
+            break;
+        }
+        cout<<endl<<endl;
+        gameEngine.printBoard();
+        cout<<endl<<endl;
+
+        if(filled_cells==42)
+            break;
+    }
+
+     gameEngine.printBoard();
+    cout<<endl<<endl;
+
+    if (winner==X_won)
+        cout<<"!!! Player 1 won !!!! \n";
+    else if(winner==O_won)
+        cout<<"!!! Player 2 won !!!! \n";
+        else
+            cout<<"!!! DRAW !!! \n";
     
-    gameEngine.printBoard();
-   // gameEngine.getWinner(current_move[0],current_move[1]);
-   cout<<gameEngine.getWinner()<<endl;
 }
